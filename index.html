@@ -19,7 +19,7 @@
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -100,7 +100,7 @@
         .content-area {
             background: white;
             border-radius: 20px;
-            padding: 30px;
+            padding: 40px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             display: none;
         }
@@ -109,78 +109,107 @@
             display: block;
         }
         
-        .menu-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
+        .menu-section {
+            margin-bottom: 40px;
         }
         
-        .menu-tab {
-            padding: 12px 24px;
-            background: #f8f8f8;
-            border: none;
-            border-radius: 10px 10px 0 0;
-            cursor: pointer;
-            font-size: 1em;
-            transition: all 0.3s;
-            color: #666;
-        }
-        
-        .menu-tab:hover {
-            background: #ffe0e5;
+        .menu-section h2 {
             color: #E15E6E;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #E15E6E;
         }
         
-        .menu-tab.active {
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .menu-item {
+            background: linear-gradient(135deg, #fff 0%, #fef5f7 100%);
+            border: 2px solid #E15E6E;
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(225, 94, 110, 0.2);
+            border-color: #E15E6E;
+        }
+        
+        .menu-item.active-link {
+            background: linear-gradient(135deg, #E15E6E 0%, #c94a5c 100%);
+            color: white;
+        }
+        
+        .menu-item.active-link h3,
+        .menu-item.active-link p {
+            color: white;
+        }
+        
+        .menu-item.coming-soon {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f5f5f5;
+            border-color: #ddd;
+        }
+        
+        .menu-item.coming-soon:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .menu-item h3 {
+            font-size: 1.4em;
+            color: #E15E6E;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .menu-item p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .link-icon {
+            font-size: 1.2em;
+            opacity: 0.6;
+        }
+        
+        .badge {
+            display: inline-block;
             background: #E15E6E;
             color: white;
-            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            margin-left: 10px;
         }
         
-        .menu-content {
-            display: none;
-            animation: fadeIn 0.5s;
+        .badge.coming {
+            background: #999;
         }
         
-        .menu-content.active {
-            display: block;
-        }
-        
-        .iframe-container {
-            width: 100%;
-            height: calc(100vh - 400px);
-            min-height: 700px;
-            border: 2px solid #f0f0f0;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-            background: white;
-        }
-        
-        .iframe-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
-        
-        .coming-soon {
+        .coming-soon-overlay {
             text-align: center;
-            padding: 100px 20px;
+            padding: 80px 20px;
             color: #999;
         }
         
-        .coming-soon h3 {
+        .coming-soon-overlay h3 {
             font-size: 2em;
             margin-bottom: 20px;
             color: #E15E6E;
-        }
-        
-        .coming-soon p {
-            font-size: 1.2em;
         }
         
         @keyframes fadeIn {
@@ -192,6 +221,10 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+        
+        .content-area.active {
+            animation: fadeIn 0.5s;
         }
         
         @media (max-width: 768px) {
@@ -216,23 +249,15 @@
             }
             
             .content-area {
-                padding: 15px;
+                padding: 20px;
             }
             
-            .menu-tabs {
-                overflow-x: auto;
-                flex-wrap: nowrap;
+            .menu-items {
+                grid-template-columns: 1fr;
             }
             
-            .menu-tab {
-                white-space: nowrap;
-                font-size: 0.9em;
-                padding: 10px 16px;
-            }
-            
-            .iframe-container {
-                height: calc(100vh - 350px);
-                min-height: 500px;
+            .menu-item {
+                padding: 20px;
             }
         }
     </style>
@@ -266,49 +291,52 @@
 
         <!-- Admin Content -->
         <div id="admin-content" class="content-area">
-            <div class="menu-tabs">
-                <button class="menu-tab active" onclick="selectAdminMenu('roster')">통합 명부 작성</button>
-                <button class="menu-tab" onclick="selectAdminMenu('list')">예약 리스트</button>
-                <button class="menu-tab" onclick="selectAdminMenu('assign')">자동 좌석 배정</button>
-                <button class="menu-tab" onclick="selectAdminMenu('stats')">통계</button>
-            </div>
-
-            <div id="admin-roster" class="menu-content active">
-                <div class="iframe-container">
-                    <iframe 
-                        src="https://integrated-list-tcats.streamlit.app/?embedded=true" 
-                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-downloads"
-                        allow="clipboard-read; clipboard-write"
-                        loading="lazy"
-                    ></iframe>
+            <div class="menu-section">
+                <h2>📋 예약 관리</h2>
+                <div class="menu-items">
+                    <div class="menu-item active-link" onclick="openLink('https://integrated-list-tcats.streamlit.app/')">
+                        <h3>
+                            통합 명부 작성
+                            <span class="link-icon">→</span>
+                        </h3>
+                        <p>인터파크, 티켓링크, 예스24 예매 데이터를 하나로 통합합니다.</p>
+                    </div>
+                    
+                    <div class="menu-item coming-soon">
+                        <h3>
+                            예약 리스트
+                            <span class="badge coming">준비중</span>
+                        </h3>
+                        <p>통합된 예약자 명단을 조회하고 관리합니다.</p>
+                    </div>
                 </div>
             </div>
 
-            <div id="admin-list" class="menu-content">
-                <div class="coming-soon">
-                    <h3>🔜 준비 중</h3>
-                    <p>예약 리스트 조회 기능을 준비 중입니다.</p>
-                </div>
-            </div>
-
-            <div id="admin-assign" class="menu-content">
-                <div class="coming-soon">
-                    <h3>🔜 준비 중</h3>
-                    <p>자동 좌석 배정 기능을 준비 중입니다.</p>
-                </div>
-            </div>
-
-            <div id="admin-stats" class="menu-content">
-                <div class="coming-soon">
-                    <h3>🔜 준비 중</h3>
-                    <p>통계 대시보드를 준비 중입니다.</p>
+            <div class="menu-section">
+                <h2>🎫 좌석 관리</h2>
+                <div class="menu-items">
+                    <div class="menu-item coming-soon">
+                        <h3>
+                            자동 좌석 배정
+                            <span class="badge coming">준비중</span>
+                        </h3>
+                        <p>비지정석 예약자에게 최적의 좌석을 자동으로 배정합니다.</p>
+                    </div>
+                    
+                    <div class="menu-item coming-soon">
+                        <h3>
+                            통계 대시보드
+                            <span class="badge coming">준비중</span>
+                        </h3>
+                        <p>예약 현황, QR 발급, 입장 통계를 실시간으로 확인합니다.</p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Company Content -->
         <div id="company-content" class="content-area">
-            <div class="coming-soon">
+            <div class="coming-soon-overlay">
                 <h3>🎭 제작사 모드</h3>
                 <p>서비스 준비 중입니다.</p>
                 <p style="margin-top: 20px; font-size: 0.9em;">타겟 마케팅 및 성과 분석 기능이 곧 제공될 예정입니다.</p>
@@ -317,38 +345,37 @@
 
         <!-- Member Content -->
         <div id="member-content" class="content-area">
-            <div class="menu-tabs">
-                <button class="menu-tab active" onclick="selectMemberMenu('qr')">QR 티켓 받기</button>
-                <button class="menu-tab" onclick="selectMemberMenu('companion')">동행인 공유</button>
-                <button class="menu-tab" onclick="selectMemberMenu('review')">리뷰 작성</button>
-            </div>
-
-            <div id="member-qr" class="menu-content active">
-                <div class="iframe-container">
-                    <iframe 
-                        src="https://qr-ticketing-tcats-gogo.streamlit.app/?embedded=true"
-                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-downloads"
-                        allow="clipboard-read; clipboard-write; camera"
-                        loading="lazy"
-                    ></iframe>
+            <div class="menu-section">
+                <h2>🎫 티켓 관리</h2>
+                <div class="menu-items">
+                    <div class="menu-item active-link" onclick="openLink('https://qr-ticketing-tcats-gogo.streamlit.app/')">
+                        <h3>
+                            QR 티켓 받기
+                            <span class="link-icon">→</span>
+                        </h3>
+                        <p>예약 정보를 입력하고 QR 티켓을 발급받습니다.</p>
+                    </div>
+                    
+                    <div class="menu-item active-link" onclick="openLink('https://qr-ticketing-tcats-gogo.streamlit.app/')">
+                        <h3>
+                            동행인 공유
+                            <span class="link-icon">→</span>
+                        </h3>
+                        <p>동행인에게 QR 티켓을 공유하고 정보를 수집합니다.</p>
+                    </div>
                 </div>
             </div>
 
-            <div id="member-companion" class="menu-content">
-                <div class="iframe-container">
-                    <iframe 
-                        src="https://qr-ticketing-tcats-gogo.streamlit.app/?embedded=true"
-                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-downloads"
-                        allow="clipboard-read; clipboard-write; camera"
-                        loading="lazy"
-                    ></iframe>
-                </div>
-            </div>
-
-            <div id="member-review" class="menu-content">
-                <div class="coming-soon">
-                    <h3>🔜 준비 중</h3>
-                    <p>공연 리뷰 작성 기능을 준비 중입니다.</p>
+            <div class="menu-section">
+                <h2>⭐ 공연 후기</h2>
+                <div class="menu-items">
+                    <div class="menu-item coming-soon">
+                        <h3>
+                            리뷰 작성
+                            <span class="badge coming">준비중</span>
+                        </h3>
+                        <p>공연을 관람한 후 리뷰를 작성하고 리워드를 받습니다.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -370,47 +397,11 @@
             // 선택된 모드 활성화
             event.target.closest('.mode-btn').classList.add('active');
             document.getElementById(mode + '-content').classList.add('active');
-            
-            // 첫 번째 탭 자동 선택
-            if (mode === 'admin') {
-                selectAdminMenu('roster');
-            } else if (mode === 'member') {
-                selectMemberMenu('qr');
-            }
         }
         
-        // 관리자 메뉴 선택
-        function selectAdminMenu(menu) {
-            // 모든 탭 비활성화
-            document.querySelectorAll('#admin-content .menu-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // 모든 메뉴 콘텐츠 숨기기
-            document.querySelectorAll('#admin-content .menu-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // 선택된 탭과 콘텐츠 활성화
-            event.target.classList.add('active');
-            document.getElementById('admin-' + menu).classList.add('active');
-        }
-        
-        // 회원 메뉴 선택
-        function selectMemberMenu(menu) {
-            // 모든 탭 비활성화
-            document.querySelectorAll('#member-content .menu-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // 모든 메뉴 콘텐츠 숨기기
-            document.querySelectorAll('#member-content .menu-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // 선택된 탭과 콘텐츠 활성화
-            event.target.classList.add('active');
-            document.getElementById('member-' + menu).classList.add('active');
+        // 링크 열기
+        function openLink(url) {
+            window.open(url, '_blank');
         }
     </script>
 </body>
