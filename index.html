@@ -19,7 +19,7 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -151,16 +151,20 @@
         
         .iframe-container {
             width: 100%;
-            height: 800px;
-            border: none;
+            height: calc(100vh - 400px);
+            min-height: 700px;
+            border: 2px solid #f0f0f0;
             border-radius: 10px;
             overflow: hidden;
+            position: relative;
+            background: white;
         }
         
         .iframe-container iframe {
             width: 100%;
             height: 100%;
             border: none;
+            display: block;
         }
         
         .coming-soon {
@@ -227,7 +231,8 @@
             }
             
             .iframe-container {
-                height: 600px;
+                height: calc(100vh - 350px);
+                min-height: 500px;
             }
         }
     </style>
@@ -270,7 +275,12 @@
 
             <div id="admin-roster" class="menu-content active">
                 <div class="iframe-container">
-                    <iframe src="https://integrated-list-tcats.streamlit.app/?embedded=true" allowfullscreen></iframe>
+                    <iframe 
+                        src="https://integrated-list-tcats.streamlit.app/?embedded=true" 
+                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-downloads"
+                        allow="clipboard-read; clipboard-write"
+                        loading="lazy"
+                    ></iframe>
                 </div>
             </div>
 
@@ -315,13 +325,23 @@
 
             <div id="member-qr" class="menu-content active">
                 <div class="iframe-container">
-                    <iframe src="https://qr-ticketing-tcats-gogo.streamlit.app/?embedded=true" allowfullscreen></iframe>
+                    <iframe 
+                        src="https://qr-ticketing-tcats-gogo.streamlit.app/?embedded=true"
+                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-downloads"
+                        allow="clipboard-read; clipboard-write; camera"
+                        loading="lazy"
+                    ></iframe>
                 </div>
             </div>
 
             <div id="member-companion" class="menu-content">
                 <div class="iframe-container">
-                    <iframe src="https://qr-ticketing-tcats-gogo.streamlit.app/?embedded=true" allowfullscreen></iframe>
+                    <iframe 
+                        src="https://qr-ticketing-tcats-gogo.streamlit.app/?embedded=true"
+                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-downloads"
+                        allow="clipboard-read; clipboard-write; camera"
+                        loading="lazy"
+                    ></iframe>
                 </div>
             </div>
 
