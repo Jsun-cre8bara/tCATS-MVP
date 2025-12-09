@@ -1,458 +1,857 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>티켓츠 tCATS - 공연 데이터 통합 플랫폼</title>
+    <title>tCATS 티켓츠 - 즐거움을 아는 SeeK한 티켓츠</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+            line-height: 1.6;
             color: #333;
+            overflow-x: hidden;
         }
-        
+
+        /* 헤더 */
+        header {
+            background: linear-gradient(135deg, #00A6ED 0%, #0088CC 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1.5rem;
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo-link img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            transition: opacity 0.3s;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #FFA500;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-left: 0.5rem;
+        }
+
+        .logo-link:hover img {
+            opacity: 0.8;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* 모바일 메뉴 */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 100px;
+                right: -100%;
+                flex-direction: column;
+                background: #00A6ED;
+                width: 70%;
+                max-width: 300px;
+                height: calc(100vh - 100px);
+                padding: 2rem;
+                gap: 1rem;
+                transition: right 0.3s ease;
+                box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.1rem;
+                padding: 0.8rem 0;
+                border-bottom: 1px solid rgba(255,255,255,0.2);
+            }
+        }
+
+        /* 히어로 섹션 */
+        .hero {
+            background: linear-gradient(rgba(0, 166, 237, 0.2), rgba(0, 153, 221, 0.3)), 
+                        url('images/main_img.png') center/cover no-repeat;
+            color: white;
+            padding: 250px 2rem 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 100%);
+            z-index: 1;
+        }
+
+        .hero > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 900;
+            color: #FFA500;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.8);
+            letter-spacing: 3px;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            word-break: keep-all;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #FFA500;
+            color: white;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 8px 20px rgba(255, 165, 0, 0.6);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 165, 0, 0.8);
+        }
+
+        /* 섹션 공통 */
+        section {
+            padding: 80px 2rem;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
         }
-        
-        .header {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+
+        .section-title {
             text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+            font-weight: 800;
         }
-        
-        .logo {
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 4rem;
+        }
+
+        /* 영상 섹션 */
+        .video-section {
+            background: #f8f9fa;
+        }
+
+        .video-horizontal {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .video-vertical {
+            display: none;
+        }
+
+        /* 서비스 프로세스 섹션 */
+        .process {
+            background: linear-gradient(135deg, #FF6B9D 0%, #FF8FAB 100%);
+            color: white;
+        }
+
+        .process .section-title,
+        .process .section-subtitle {
+            color: white;
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .process-step {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .process-step:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: #FFA500;
+            border-radius: 50%;
+            line-height: 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .process-step h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .process-step p {
+            opacity: 0.95;
+            font-size: 0.95rem;
+        }
+
+        /* 앱 기능 섹션 */
+        .app-features {
+            background: white;
+        }
+
+        .features-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .phone-mockup {
+            text-align: center;
+            position: relative;
+        }
+
+        .phone-frame {
+            width: 300px;
+            height: 600px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FF8FAB 100%);
+            border-radius: 40px;
+            padding: 20px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .phone-screen h4 {
+            color: #FF6B9D;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .phone-screen .phone-logo {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+        }
+
+        .phone-screen .steps {
+            text-align: left;
+            width: 100%;
+        }
+
+        .phone-screen .steps li {
+            color: #FF6B9D;
+            margin: 0.8rem 0;
+            font-weight: 500;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .feature-item {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-left: 4px solid #00A6ED;
+        }
+
+        .feature-item h4 {
+            color: #00A6ED;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .feature-item p {
+            color: #666;
+        }
+
+        /* 티켓 샘플 섹션 */
+        .ticket-sample {
+            background: linear-gradient(135deg, #FF6B9D 0%, #FF8FAB 100%);
+            color: white;
+        }
+
+        .ticket-sample .section-title,
+        .ticket-sample .section-subtitle {
+            color: white;
+        }
+
+        .ticket-display {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .ticket-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 320px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .ticket-header {
+            border-bottom: 3px dashed #FF6B9D;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .ticket-code {
+            color: #333;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .ticket-info {
+            color: #666;
+            margin: 0.5rem 0;
+        }
+
+        .ticket-info strong {
+            color: #FF6B9D;
+        }
+
+        .qr-placeholder {
+            width: 120px;
+            height: 120px;
+            background: #f0f0f0;
+            margin: 1rem auto;
+            border: 3px solid #FF6B9D;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .logo img {
-            height: 60px;
-            width: auto;
-        }
-        
-        .logo h1 {
-            color: #E15E6E;
-            font-size: 2.5em;
-            font-weight: bold;
-        }
-        
-        .subtitle {
-            color: #666;
-            font-size: 1.1em;
-        }
-        
-        .mode-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .mode-btn {
-            background: white;
-            border: 3px solid #E15E6E;
-            border-radius: 15px;
-            padding: 30px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-        
-        .mode-btn:hover {
-            background: #E15E6E;
-            color: white;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(225, 94, 110, 0.3);
-        }
-        
-        .mode-btn.active {
-            background: #E15E6E;
-            color: white;
-            box-shadow: 0 10px 30px rgba(225, 94, 110, 0.3);
-        }
-        
-        .mode-btn h3 {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-        }
-        
-        .mode-btn p {
-            font-size: 0.9em;
-            opacity: 0.8;
-        }
-        
-        .content-area {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            display: none;
-        }
-        
-        .content-area.active {
-            display: block;
-        }
-        
-        .menu-section {
-            margin-bottom: 40px;
-        }
-        
-        .menu-section h2 {
-            color: #E15E6E;
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #E15E6E;
-        }
-        
-        .menu-items {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .menu-item {
-            background: linear-gradient(135deg, #fff 0%, #fef5f7 100%);
-            border: 2px solid #E15E6E;
-            border-radius: 15px;
-            padding: 30px;
-            transition: all 0.3s;
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .menu-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(225, 94, 110, 0.2);
-            border-color: #E15E6E;
-        }
-        
-        .menu-item.active-link {
-            background: linear-gradient(135deg, #E15E6E 0%, #c94a5c 100%);
-            color: white;
-        }
-        
-        .menu-item.active-link h3,
-        .menu-item.active-link p {
-            color: white;
-        }
-        
-        .menu-item.coming-soon {
-            opacity: 0.5;
-            cursor: not-allowed;
-            background: #f5f5f5;
-            border-color: #ddd;
-        }
-        
-        .menu-item.coming-soon:hover {
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .menu-item h3 {
-            font-size: 1.4em;
-            color: #E15E6E;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .menu-item p {
-            color: #666;
-            font-size: 0.95em;
-            line-height: 1.6;
-        }
-        
-        .link-icon {
-            font-size: 1.2em;
-            opacity: 0.6;
-        }
-        
-        .badge {
-            display: inline-block;
-            background: #E15E6E;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75em;
-            margin-left: 10px;
-        }
-        
-        .badge.coming {
-            background: #999;
-        }
-        
-        .coming-soon-overlay {
-            text-align: center;
-            padding: 80px 20px;
+            font-size: 0.8rem;
             color: #999;
         }
-        
-        .coming-soon-overlay h3 {
-            font-size: 2em;
-            margin-bottom: 20px;
-            color: #E15E6E;
+
+        .ticket-brand {
+            text-align: center;
+            margin-top: 1rem;
         }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+
+        .ticket-brand-logo {
+            width: 100px;
+            height: 100px;
+            margin: 1rem auto;
+            object-fit: contain;
         }
-        
-        .content-area.active {
-            animation: fadeIn 0.5s;
+
+        .ticket-brand h3 {
+            color: #FF6B9D;
+            font-size: 2rem;
+            font-weight: 900;
         }
-        
+
+        .ticket-brand p {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        /* 문의 섹션 */
+        .contact {
+            background: white;
+            text-align: center;
+        }
+
+        .contact-box {
+            background: linear-gradient(135deg, #00A6ED 0%, #0099DD 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 15px 50px rgba(0, 166, 237, 0.3);
+            position: relative;
+        }
+
+        .contact-cat {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1rem;
+            object-fit: contain;
+        }
+
+        .contact-box h3 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-info {
+            text-align: left;
+            margin: 2rem auto;
+            max-width: 400px;
+        }
+
+        .contact-info p {
+            margin: 1rem 0;
+            font-size: 1.1rem;
+        }
+
+        .contact-info strong {
+            color: #FFA500;
+            display: inline-block;
+            width: 100px;
+        }
+
+        /* 푸터 */
+        footer {
+            background: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        footer p {
+            opacity: 0.8;
+            margin: 0.5rem 0;
+        }
+
+        .footer-tagline {
+            color: #FFA500;
+            font-weight: 600;
+        }
+
+        /* 반응형 */
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
+            nav {
+                padding: 0 1rem;
+            }
+
+            .logo-link img {
+                width: 80px;
+                height: 80px;
+            }
+
+            .logo-text {
+                font-size: 1.5rem;
+                letter-spacing: 1px;
+            }
+
+            .hero {
+                padding: 180px 2rem 80px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 0.9rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+
+            /* 모바일에서 영상 전환 */
+            .video-horizontal {
+                display: none;
             }
             
-            .header {
-                padding: 20px;
+            .video-vertical {
+                display: block;
+                max-width: 400px;
+                margin: 0 auto;
             }
-            
-            .logo h1 {
-                font-size: 1.8em;
-            }
-            
-            .logo img {
-                height: 40px;
-            }
-            
-            .mode-selector {
+
+            .features-content {
                 grid-template-columns: 1fr;
             }
-            
-            .content-area {
-                padding: 20px;
+
+            .phone-frame {
+                width: 250px;
+                height: 500px;
             }
-            
-            .menu-items {
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .process-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .menu-item {
-                padding: 20px;
+
+            .contact-info strong {
+                display: block;
+                width: auto;
+                margin-bottom: 0.3rem;
             }
+            
+            .contact-info p {
+                font-size: 1rem;
+                word-break: break-all;
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo">
-                <img src="logo.png" alt="tCATS Logo" onerror="this.style.display='none'">
-                <h1>티켓츠 tCATS</h1>
-            </div>
-            <p class="subtitle">공연 데이터 통합 플랫폼</p>
-        </div>
+    <!-- 헤더 -->
+    <header>
+        <nav>
+            <a href="#home" class="logo-link">
+                <img src="images/cats.png" alt="tCATS">
+                <span class="logo-text">tCATS</span>
+            </a>
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#video">영상</a></li>
+                <li><a href="#service">서비스</a></li>
+                <li><a href="#features">기능</a></li>
+                <li><a href="dashboard.html">데모</a></li>
+                <li><a href="#ticket">티켓</a></li>
+                <li><a href="#contact">문의</a></li>
+            </ul>
+        </nav>
+    </header>
 
-        <!-- Mode Selector -->
-        <div class="mode-selector">
-            <div class="mode-btn" onclick="selectMode('admin')">
-                <h3>🔧 관리자 모드</h3>
-                <p>통합 명부 및 시스템 관리</p>
-            </div>
-            <div class="mode-btn" onclick="selectMode('company')">
-                <h3>🎭 제작사 모드</h3>
-                <p>타겟 마케팅 및 성과 분석</p>
-            </div>
-            <div class="mode-btn" onclick="selectMode('member')">
-                <h3>👤 회원 모드</h3>
-                <p>QR 티켓 및 공연 정보</p>
-            </div>
-        </div>
+    <!-- 히어로 섹션 -->
+    <section id="home" class="hero">
+        <h1>tCATS</h1>
+        <p class="subtitle">즐거움을 아는 SeeK한 티켓츠</p>
+        <p>"제작사에게 관객데이터를 기반한 리마케팅 플랫폼 서비스"를 "관객에게 DM 큐레이팅으로 합리적 소비"로 "공연 생태계가 새로운 가치와 함께 성장할 수 있도록" 돕는 플랫폼입니다.</p>
+        <a href="https://jsun-cre8bara.github.io/tCATS-MVP/" target="_blank" class="cta-button">지금 시작하기</a>
+    </section>
 
-        <!-- Admin Content -->
-        <div id="admin-content" class="content-area">
-            <div class="menu-section">
-                <h2>📋 예약 관리</h2>
-                <div class="menu-items">
-                    <div class="menu-item active-link" onclick="openLink('https://web-production-b67d.up.railway.app/')">
-                        <h3>
-                            통합 명부 작성
-                            <span class="link-icon">→</span>
-                        </h3>
-                        <p>인터파크, 티켓링크, 예스24 예매 데이터를 하나로 통합합니다.</p>
-                    </div>
-                    
-                    <div class="menu-item active-link" onclick="openLink('https://web-production-b67d.up.railway.app/')">
-                        <h3>
-                            예약 리스트
-                            <span class="link-icon">→</span>
-                        </h3>
-                        <p>통합된 예약자 명단을 조회하고 관리합니다.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="menu-section">
-                <h2>🎫 좌석 관리</h2>
-                <div class="menu-items">
-                    <div class="menu-item coming-soon">
-                        <h3>
-                            자동 좌석 배정
-                            <span class="badge coming">준비중</span>
-                        </h3>
-                        <p>비지정석 예약자에게 최적의 좌석을 자동으로 배정합니다.</p>
-                    </div>
-                    
-                    <div class="menu-item coming-soon">
-                        <h3>
-                            통계 대시보드
-                            <span class="badge coming">준비중</span>
-                        </h3>
-                        <p>예약 현황, QR 발급, 입장 통계를 실시간으로 확인합니다.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Company Content -->
-        <div id="company-content" class="content-area">
-            <div class="menu-section">
-                <h2>🎭 제작사 대시보드</h2>
-                <div class="menu-items">
-                    <div class="menu-item active-link" onclick="openLink('https://jsun-cre8bara-production-dashboard-app-punkrv.streamlit.app/')">
-                        <h3>
-                            제작사 대시보드
-                            <span class="link-icon">→</span>
-                        </h3>
-                        <p>타겟 마케팅 및 성과 분석 대시보드를 확인합니다.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Member Content -->
-        <div id="member-content" class="content-area">
-            <div class="menu-section">
-                <h2>🎫 티켓 관리</h2>
-                <div class="menu-items">
-                    <div class="menu-item active-link" onclick="openLink('https://qr-ticketing-tcats-gogo.streamlit.app/')">
-                        <h3>
-                            QR 티켓 받기
-                            <span class="link-icon">→</span>
-                        </h3>
-                        <p>예약 정보를 입력하고 QR 티켓을 발급받습니다.</p>
-                    </div>
-                    
-                    <div class="menu-item active-link" onclick="openLink('https://qr-ticketing-tcats-gogo.streamlit.app/')">
-                        <h3>
-                            동행인 공유
-                            <span class="link-icon">→</span>
-                        </h3>
-                        <p>동행인에게 QR 티켓을 공유하고 정보를 수집합니다.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="menu-section">
-                <h2>⭐ 공연 후기</h2>
-                <div class="menu-items">
-                    <div class="menu-item coming-soon">
-                        <h3>
-                            리뷰 작성
-                            <span class="badge coming">준비중</span>
-                        </h3>
-                        <p>공연을 관람한 후 리뷰를 작성하고 리워드를 받습니다.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // URL 경로에 따라 자동으로 모드 선택
-        window.addEventListener('DOMContentLoaded', function() {
-            const path = window.location.pathname.toLowerCase();
+    <!-- 홍보 영상 섹션 -->
+    <section id="video" class="video-section">
+        <div class="container">
+            <h2 class="section-title">tCATS 홍보 영상</h2>
+            <p class="section-subtitle">티켓츠의 혁신적인 서비스를 영상으로 만나보세요</p>
             
-            // 루트 경로(/)가 아닐 때만 자동 모드 선택
-            if (path !== '/' && path !== '') {
-                // 경로에 따라 자동 모드 선택
-                if (path.includes('admin')) {
-                    autoSelectMode('admin');
-                } else if (path.includes('company')) {
-                    autoSelectMode('company');
-                } else if (path.includes('member')) {
-                    autoSelectMode('member');
-                }
-            }
-            // 루트 경로(/)면 아무것도 하지 않음 → 사용자가 직접 선택
+            <!-- PC용 가로형 영상 -->
+            <div class="video-horizontal">
+                <video 
+                    width="100%" 
+                    height="auto" 
+                    controls 
+                    preload="metadata"
+                    style="border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+                    <source src="videos/horizontal.mp4" type="video/mp4">
+                    브라우저가 비디오를 지원하지 않습니다.
+                </video>
+            </div>
+
+            <!-- 모바일용 세로형 영상 -->
+            <div class="video-vertical">
+                <video 
+                    width="100%" 
+                    height="auto" 
+                    controls 
+                    preload="metadata"
+                    style="border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+                    <source src="videos/vertical.mp4" type="video/mp4">
+                    브라우저가 비디오를 지원하지 않습니다.
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <!-- 서비스 프로세스 -->
+    <section id="service" class="process">
+        <div class="container">
+            <h2 class="section-title">티켓 간편 발권 서비스</h2>
+            <p class="section-subtitle">Super easy ticketing. right?</p>
+            
+            <div class="process-grid">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h3>QR 스캔 후 본인인증</h3>
+                    <p>빠르고 간편한 인증</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h3>예매 정보 입력</h3>
+                    <p>간단한 정보만 입력</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h3>좌석 선택</h3>
+                    <p>원하는 좌석 배정</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h3>티켓 발권</h3>
+                    <p>모바일 QR 티켓 발급</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">5</div>
+                    <h3>공연장 입장</h3>
+                    <p>QR로 간편 입장</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">6</div>
+                    <h3>리뷰 & 리워드</h3>
+                    <p>공연 만족도 평가, 리워드, 재관람 또는 지인 추천</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 앱 기능 -->
+    <section id="features" class="app-features">
+        <div class="container">
+            <h2 class="section-title">모바일 티켓팅의 모든 것</h2>
+            <p class="section-subtitle">하나의 앱으로 예매부터 입장까지</p>
+            
+            <div class="features-content">
+                <div class="phone-mockup">
+                    <div class="phone-frame">
+                        <div class="phone-screen">
+                            <img src="images/cats.png" alt="tCATS 로고" class="phone-logo">
+                            <h4>tCATS</h4>
+                            <p style="font-size: 0.9rem; color: #999;">Step by step</p>
+                            <ol class="steps" style="list-style: none; padding: 0;">
+                                <li>1. QR코드 스캔 후 본인인증</li>
+                                <li>2. 예매 정보 입력</li>
+                                <li>3. 좌석 선택</li>
+                                <li>4. 티켓 발권</li>
+                                <li>5. 공연장 입장</li>
+                                <li>6. 리뷰 & 리워드</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h4>📱 예매자 이름 입력</h4>
+                        <p>전화번호로 간편하게 예매 정보를 확인하세요</p>
+                    </div>
+
+                    <div class="feature-item">
+                        <h4>📞 전화번호 입력</h4>
+                        <p>본인 인증과 티켓 발급을 한번에</p>
+                    </div>
+
+                    <div class="feature-item">
+                        <h4>🎫 QR 입장권 발권</h4>
+                        <p>모바일로 받는 디지털 티켓</p>
+                    </div>
+
+                    <div class="feature-item">
+                        <h4>💺 좌석선택 (비지정 예매시)</h4>
+                        <p>최적의 좌석을 자동으로 배정받으세요</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- QR입장권 샘플 -->
+    <section id="ticket" class="ticket-sample">
+        <div class="container">
+            <h2 class="section-title">QR 입장권 미리보기</h2>
+            <p class="section-subtitle">깔끔하고 편리한 QR 입장권</p>
+            
+            <div class="ticket-display">
+                <div class="ticket-card">
+                    <div class="ticket-header">
+                        <p style="color: #FF6B9D; font-weight: bold; margin-bottom: 0.5rem;">Ticket Code</p>
+                        <h3 class="ticket-code">SGJ/DIRKALAKPF-123456</h3>
+                    </div>
+                    
+                    <div class="ticket-info">
+                        <strong>Event</strong><br>
+                        티켓츠 런칭 행사
+                    </div>
+                    
+                    <div class="ticket-info">
+                        <strong>Date</strong> 8월 20일 &nbsp;&nbsp; <strong>Time</strong> 7시30분
+                    </div>
+                    
+                    <div class="ticket-info">
+                        <strong>Duration</strong> 100분
+                    </div>
+                    
+                    <div class="ticket-info">
+                        <strong>Place</strong> 부평테크시티 1009호
+                    </div>
+
+                    <div class="qr-placeholder">
+                        QR CODE
+                    </div>
+                </div>
+
+                <div class="ticket-card">
+                    <div style="text-align: center; padding: 2rem 0;">
+                        <p style="color: #999; font-size: 0.9rem; margin-bottom: 1rem;">CRE8BARA</p>
+                        <img src="images/cats.png" alt="티켓츠 로고" class="ticket-brand-logo">
+                        <div class="ticket-brand">
+                            <h3>tCATS</h3>
+                            <p>Convenience Ticket Subscribe</p>
+                        </div>
+                        <div style="margin-top: 2rem; color: #FF6B9D;">
+                            <span style="font-size: 1.2rem;">📘 📷</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 문의 섹션 -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">함께 성장하세요</h2>
+            <p class="section-subtitle">티켓츠와 함께 공연의 새로운 가능성을 열어보세요</p>
+            
+            <div class="contact-box">
+                <img src="images/cats.png" alt="고양이" class="contact-cat">
+                <h3>무료 상담 신청</h3>
+                <div class="contact-info">
+                    <p><strong>이메일</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1e6d7b7b75306a7d7f6a6d5e79737f7772307d7173">[email&#160;protected]</a></p>
+                    <p><strong>전화</strong> 02-1661-1301</p>
+                </div>
+                <a href="/cdn-cgi/l/email-protection#93e0f6f6f8bde7f0f2e7e0d3f4fef2faffbdf0fcfe" class="cta-button" style="background: #FFA500; margin-top: 1rem;">이메일 문의하기</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer>
+        <p>&copy; CRE*BARA Inc. All rights reserved.</p>
+        <p class="footer-tagline">We are One TEAM."Together, Empathy, Action, Mission"</p>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // 모바일 메뉴 토글
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
         });
-        
-        // 자동 모드 선택 (버튼 클릭 없이)
-        function autoSelectMode(mode) {
-            // 모든 콘텐츠 영역 숨기기
-            document.querySelectorAll('.content-area').forEach(area => {
-                area.classList.remove('active');
+
+        // 메뉴 링크 클릭 시 메뉴 닫기
+        const links = document.querySelectorAll('.nav-links a');
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
             });
-            
-            // 선택된 모드 활성화
-            const targetContent = document.getElementById(mode + '-content');
-            if (targetContent) {
-                targetContent.classList.add('active');
-            }
-            
-            // 해당 모드 버튼 하이라이트
-            const modeBtns = document.querySelectorAll('.mode-btn');
-            modeBtns.forEach((btn, index) => {
-                btn.classList.remove('active');
-                if ((mode === 'admin' && index === 0) ||
-                    (mode === 'company' && index === 1) ||
-                    (mode === 'member' && index === 2)) {
-                    btn.classList.add('active');
-                }
-            });
-        }
-        
-        // 모드 선택 (버튼 클릭시)
-        function selectMode(mode) {
-            // 모든 모드 버튼 비활성화
-            document.querySelectorAll('.mode-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // 모든 콘텐츠 영역 숨기기
-            document.querySelectorAll('.content-area').forEach(area => {
-                area.classList.remove('active');
-            });
-            
-            // 선택된 모드 활성화
-            event.target.closest('.mode-btn').classList.add('active');
-            document.getElementById(mode + '-content').classList.add('active');
-        }
-        
-        // 링크 열기
-        function openLink(url) {
-            window.open(url, '_blank');
-        }
-    </script>
-</body>
-</html>
+        });
+
+        // 

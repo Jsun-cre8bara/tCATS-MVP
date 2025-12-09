@@ -2,15 +2,19 @@
   "rewrites": [
     {
       "source": "/admin",
-      "destination": "/index.html"
+      "destination": "/dashboard.html"
     },
     {
       "source": "/company",
-      "destination": "/index.html"
+      "destination": "/dashboard.html"
     },
     {
       "source": "/member",
-      "destination": "/index.html"
+      "destination": "/dashboard.html"
+    },
+    {
+      "source": "/demo",
+      "destination": "/dashboard.html"
     }
   ],
   "headers": [
