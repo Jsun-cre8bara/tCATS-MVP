@@ -661,38 +661,28 @@
                     width="100%" 
                     height="auto" 
                     preload="metadata"
-                    style="border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: block;">
+                    poster="tcats_title_logo.jpg"
+                    style="border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: block; min-height: 400px; background: #000;">
                     <source src="videos/horizontal.mp4" type="video/mp4">
                     브라우저가 비디오를 지원하지 않습니다.
                 </video>
                 
                 <!-- 썸네일 오버레이 -->
-                <div id="horizontal-overlay" onclick="playVideo('horizontal')" style="
+                <div id="horizontal-overlay" style="
                     position: absolute;
                     top: 0;
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background: #000;
+                    background: rgba(0, 0, 0, 0.3);
                     border-radius: 20px;
                     cursor: pointer;
-                    overflow: hidden;
                     display: flex;
                     justify-content: center;
-                    align-items: center;">
-                    <!-- 썸네일 이미지 - 전체 화면 -->
-                    <img src="tcats_title_logo.jpg" alt="tCATS" style="
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                        object-position: center;">
+                    align-items: center;
+                    z-index: 5;">
                     <!-- 재생 버튼 -->
                     <div style="
-                        position: relative;
-                        z-index: 10;
                         width: 100px;
                         height: 100px;
                         background: rgba(255, 255, 255, 0.95);
@@ -701,8 +691,7 @@
                         justify-content: center;
                         align-items: center;
                         box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-                        transition: all 0.3s;
-                        pointer-events: none;">
+                        transition: all 0.3s;">
                         <div style="
                             width: 0;
                             height: 0;
@@ -721,38 +710,28 @@
                     width="100%" 
                     height="auto" 
                     preload="metadata"
-                    style="border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: block;">
+                    poster="tcats_title_logo.jpg"
+                    style="border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: block; min-height: 500px; background: #000;">
                     <source src="videos/vertical.mp4" type="video/mp4">
                     브라우저가 비디오를 지원하지 않습니다.
                 </video>
                 
                 <!-- 썸네일 오버레이 -->
-                <div id="vertical-overlay" onclick="playVideo('vertical')" style="
+                <div id="vertical-overlay" style="
                     position: absolute;
                     top: 0;
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background: #000;
+                    background: rgba(0, 0, 0, 0.3);
                     border-radius: 20px;
                     cursor: pointer;
-                    overflow: hidden;
                     display: flex;
                     justify-content: center;
-                    align-items: center;">
-                    <!-- 썸네일 이미지 - 전체 화면 -->
-                    <img src="tcats_title_logo.jpg" alt="tCATS" style="
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                        object-position: center;">
+                    align-items: center;
+                    z-index: 5;">
                     <!-- 재생 버튼 -->
                     <div style="
-                        position: relative;
-                        z-index: 10;
                         width: 80px;
                         height: 80px;
                         background: rgba(255, 255, 255, 0.95);
@@ -760,8 +739,7 @@
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-                        pointer-events: none;">
+                        box-shadow: 0 8px 30px rgba(0,0,0,0.4);">
                         <div style="
                             width: 0;
                             height: 0;
@@ -923,37 +901,51 @@
             const overlay = document.getElementById(type + '-overlay');
             
             if (!video || !overlay) {
-                console.error('Video or overlay not found');
+                console.error('Video or overlay not found:', type);
                 return;
             }
             
             console.log('Playing video:', type);
             
             // 오버레이 숨기기
-            overlay.style.display = 'none';
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 300);
             
             // 컨트롤 표시
             video.controls = true;
             
             // 동영상 재생
-            video.play().catch(err => {
+            video.play().then(() => {
+                console.log('Video playing successfully');
+            }).catch(err => {
                 console.error('Play error:', err);
-            });
-            
-            // 동영상 종료 시 오버레이 다시 표시
-            video.addEventListener('ended', function() {
                 overlay.style.display = 'flex';
-                video.controls = false;
-            }, { once: true });
-            
-            // 일시정지 시에도 처리 (선택사항)
-            video.addEventListener('pause', function() {
-                if (video.ended) {
-                    overlay.style.display = 'flex';
-                    video.controls = false;
-                }
-            }, { once: true });
+                overlay.style.opacity = '1';
+            });
         }
+        
+        // 페이지 로드 후 이벤트 리스너 등록
+        document.addEventListener('DOMContentLoaded', function() {
+            // PC용 동영상
+            const horizontalOverlay = document.getElementById('horizontal-overlay');
+            if (horizontalOverlay) {
+                horizontalOverlay.addEventListener('click', function() {
+                    playVideo('horizontal');
+                });
+                console.log('Horizontal overlay click listener added');
+            }
+            
+            // 모바일용 동영상
+            const verticalOverlay = document.getElementById('vertical-overlay');
+            if (verticalOverlay) {
+                verticalOverlay.addEventListener('click', function() {
+                    playVideo('vertical');
+                });
+                console.log('Vertical overlay click listener added');
+            }
+        });
         
         // 모바일 메뉴 토글
         const menuToggle = document.getElementById('menuToggle');
