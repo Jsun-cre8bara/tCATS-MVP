@@ -750,10 +750,6 @@
                     </div>
                 </div>
             </div>
-                            margin-left: 4px;"></div>
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -928,6 +924,31 @@
         
         // 페이지 로드 후 이벤트 리스너 등록
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded - initializing...');
+            
+            // 모바일 메뉴 토글
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (menuToggle && navLinks) {
+                menuToggle.addEventListener('click', function() {
+                    console.log('Menu toggle clicked');
+                    navLinks.classList.toggle('active');
+                });
+                
+                // 메뉴 링크 클릭 시 메뉴 닫기
+                const links = document.querySelectorAll('.nav-links a');
+                links.forEach(link => {
+                    link.addEventListener('click', function() {
+                        navLinks.classList.remove('active');
+                    });
+                });
+                
+                console.log('Mobile menu initialized');
+            } else {
+                console.error('Menu elements not found');
+            }
+            
             // PC용 동영상
             const horizontalOverlay = document.getElementById('horizontal-overlay');
             if (horizontalOverlay) {
@@ -945,22 +966,6 @@
                 });
                 console.log('Vertical overlay click listener added');
             }
-        });
-        
-        // 모바일 메뉴 토글
-        const menuToggle = document.getElementById('menuToggle');
-        const navLinks = document.getElementById('navLinks');
-
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-
-        // 메뉴 링크 클릭 시 메뉴 닫기
-        const links = document.querySelectorAll('.nav-links a');
-        links.forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-            });
         });
 
         // 
