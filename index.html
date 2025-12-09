@@ -389,7 +389,46 @@
     </div>
 
     <script>
-        // 모드 선택
+        // URL 경로에 따라 자동으로 모드 선택
+        window.addEventListener('DOMContentLoaded', function() {
+            const path = window.location.pathname.toLowerCase();
+            
+            // 경로에 따라 자동 모드 선택
+            if (path.includes('admin')) {
+                autoSelectMode('admin');
+            } else if (path.includes('company')) {
+                autoSelectMode('company');
+            } else if (path.includes('member')) {
+                autoSelectMode('member');
+            }
+        });
+        
+        // 자동 모드 선택 (버튼 클릭 없이)
+        function autoSelectMode(mode) {
+            // 모든 콘텐츠 영역 숨기기
+            document.querySelectorAll('.content-area').forEach(area => {
+                area.classList.remove('active');
+            });
+            
+            // 선택된 모드 활성화
+            const targetContent = document.getElementById(mode + '-content');
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+            
+            // 해당 모드 버튼 하이라이트
+            const modeBtns = document.querySelectorAll('.mode-btn');
+            modeBtns.forEach((btn, index) => {
+                btn.classList.remove('active');
+                if ((mode === 'admin' && index === 0) ||
+                    (mode === 'company' && index === 1) ||
+                    (mode === 'member' && index === 2)) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+        
+        // 모드 선택 (버튼 클릭시)
         function selectMode(mode) {
             // 모든 모드 버튼 비활성화
             document.querySelectorAll('.mode-btn').forEach(btn => {
