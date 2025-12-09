@@ -393,14 +393,18 @@
         window.addEventListener('DOMContentLoaded', function() {
             const path = window.location.pathname.toLowerCase();
             
-            // 경로에 따라 자동 모드 선택
-            if (path.includes('admin')) {
-                autoSelectMode('admin');
-            } else if (path.includes('company')) {
-                autoSelectMode('company');
-            } else if (path.includes('member')) {
-                autoSelectMode('member');
+            // 루트 경로(/)가 아닐 때만 자동 모드 선택
+            if (path !== '/' && path !== '') {
+                // 경로에 따라 자동 모드 선택
+                if (path.includes('admin')) {
+                    autoSelectMode('admin');
+                } else if (path.includes('company')) {
+                    autoSelectMode('company');
+                } else if (path.includes('member')) {
+                    autoSelectMode('member');
+                }
             }
+            // 루트 경로(/)면 아무것도 하지 않음 → 사용자가 직접 선택
         });
         
         // 자동 모드 선택 (버튼 클릭 없이)
