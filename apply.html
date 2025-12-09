@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>티켓츠 tCATS - 권한 신청</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header .logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .header h1 {
+            color: #E15E6E;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h2 {
+            color: #333;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #E15E6E;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group label .required {
+            color: #ff4444;
+            margin-left: 0.2rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #E15E6E;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .radio-option input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #E15E6E;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 5px;
+        }
+
+        .info-box h3 {
+            color: #E15E6E;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .info-box ul {
+            margin-top: 0.5rem;
+            margin-left: 1.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .account-preview {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .account-preview.show {
+            display: block;
+        }
+
+        .account-preview h3 {
+            color: #1976d2;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .account-preview .code {
+            background: white;
+            padding: 0.8rem;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: #333;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #E15E6E 0%, #C14E5E 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(225, 94, 110, 0.4);
+        }
+
+        .submit-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.8rem 1.5rem;
+            color: #666;
+            text-decoration: none;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .back-button:hover {
+            border-color: #E15E6E;
+            color: #E15E6E;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-message .icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .success-message h2 {
+            color: #4caf50;
+            margin-bottom: 1rem;
+        }
+
+        .success-message p {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🐱</div>
+            <h1>티켓츠 tCATS</h1>
+            <p>대시보드 권한 신청</p>
+        </div>
+
+        <!-- 신청 양식 -->
+        <form id="application-form">
+            <div class="form-section">
+                <h2>📋 기본 정보</h2>
+                
+                <div class="form-group">
+                    <label>
+                        권한 종류<span class="required">*</span>
+                    </label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="company" name="role" value="company" checked>
+                            <label for="company" style="margin-bottom: 0;">제작사</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="member" name="role" value="member">
+                            <label for="member" style="margin-bottom: 0;">회원</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>📌 권한 종류 안내</h3>
+                    <ul>
+                        <li><strong>제작사:</strong> 공연 제작사 및 기획사 대상, 타겟 마케팅 및 성과 분석 기능</li>
+                        <li><strong>회원:</strong> 일반 관람객 대상, QR 티켓 발급 및 공연 정보 확인</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>👤 신청자 정보</h2>
+                
+                <div class="form-group">
+                    <label>
+                        이름<span class="required">*</span>
+                    </label>
+                    <input type="text" id="name" placeholder="홍길동" required>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        연락처<span class="required">*</span>
+                    </label>
+                    <input type="tel" id="phone" placeholder="010-1234-5678" required>
+                </div>
+
+                <div class="form-group" id="company-name-group" style="display: none;">
+                    <label>
+                        제작사/기획사명<span class="required">*</span>
+                    </label>
+                    <input type="text" id="company-name" placeholder="예) 씨어터 프로덕션">
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        이메일<span class="required">*</span>
+                    </label>
+                    <input type="email" id="email" placeholder="example@email.com" required>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>📝 신청 사유</h2>
+                
+                <div class="form-group">
+                    <label>
+                        이용 목적<span class="required">*</span>
+                    </label>
+                    <textarea id="purpose" placeholder="티켓츠 tCATS를 이용하고자 하는 목적을 간단히 작성해주세요." required></textarea>
+                </div>
+            </div>
+
+            <!-- 계정 미리보기 -->
+            <div class="account-preview" id="account-preview">
+                <h3>🔑 생성될 액세스 코드</h3>
+                <div class="code" id="preview-code"></div>
+            </div>
+
+            <button type="submit" class="submit-button">신청하기</button>
+        </form>
+
+        <!-- 성공 메시지 -->
+        <div class="success-message" id="success-message">
+            <div class="icon">✅</div>
+            <h2>액세스 코드가 발급되었습니다!</h2>
+            <p style="color: #E15E6E; font-weight: bold; font-size: 1.1rem;">아래 액세스 코드로 즉시 로그인 가능합니다.</p>
+            <p style="margin-top: 0.5rem; color: #666;">액세스 코드를 꼭 기억해주세요!</p>
+            <div style="margin-top: 2rem;">
+                <div class="account-preview show">
+                    <h3>📋 발급 정보</h3>
+                    <div id="summary"></div>
+                </div>
+            </div>
+            <a href="dashboard.html" class="back-button" style="display: inline-block; margin-top: 2rem; background: linear-gradient(135deg, #E15E6E 0%, #C14E5E 100%); color: white; border: none;">로그인하러 가기</a>
+        </div>
+    </div>
+
+    <script>
+        // 역할 변경 시 제작사명 필드 표시/숨김
+        document.querySelectorAll('input[name="role"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const companyNameGroup = document.getElementById('company-name-group');
+                const companyNameInput = document.getElementById('company-name');
+                
+                if (this.value === 'company') {
+                    companyNameGroup.style.display = 'block';
+                    companyNameInput.required = true;
+                } else {
+                    companyNameGroup.style.display = 'none';
+                    companyNameInput.required = false;
+                }
+
+                updatePreview();
+            });
+        });
+
+        // 연락처 입력 시 실시간 미리보기
+        document.getElementById('phone').addEventListener('input', updatePreview);
+
+        function updatePreview() {
+            const role = document.querySelector('input[name="role"]:checked').value;
+            const phone = document.getElementById('phone').value.replace(/[^0-9]/g, '');
+            
+            if (phone.length >= 10) {
+                const prefix = role === 'company' ? 'company_' : 'Member_';
+                const code = prefix + phone;
+                
+                document.getElementById('preview-code').textContent = code;
+                document.getElementById('account-preview').classList.add('show');
+            } else {
+                document.getElementById('account-preview').classList.remove('show');
+            }
+        }
+
+        // 폼 제출
+        document.getElementById('application-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const role = document.querySelector('input[name="role"]:checked').value;
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const companyName = document.getElementById('company-name').value;
+            const email = document.getElementById('email').value;
+            const purpose = document.getElementById('purpose').value;
+
+            const roleText = role === 'company' ? '제작사' : '회원';
+            const prefix = role === 'company' ? 'company_' : 'Member_';
+            const accessCode = prefix + phone.replace(/[^0-9]/g, '');
+
+            // 신청 데이터 생성
+            const applicant = {
+                role: role,
+                roleText: roleText,
+                name: name,
+                phone: phone,
+                companyName: companyName || '',
+                email: email,
+                purpose: purpose,
+                accessCode: accessCode,
+                timestamp: new Date().toLocaleString('ko-KR')
+            };
+
+            // localStorage에 신청자 목록 저장
+            const applicants = JSON.parse(localStorage.getItem('tcats_applicants') || '[]');
+            applicants.push(applicant);
+            localStorage.setItem('tcats_applicants', JSON.stringify(applicants));
+
+            // ACCESS_CODES에 자동 추가 (실시간 반영)
+            const accessCodes = JSON.parse(localStorage.getItem('tcats_access_codes') || '{}');
+            accessCodes[accessCode] = role;
+            localStorage.setItem('tcats_access_codes', JSON.stringify(accessCodes));
+
+            // 요약 정보 생성
+            let summary = `
+                <div style="background: white; padding: 1rem; border-radius: 5px; margin-top: 0.5rem; text-align: left;">
+                    <p><strong>권한:</strong> ${roleText}</p>
+                    <p><strong>이름:</strong> ${name}</p>
+                    <p><strong>연락처:</strong> ${phone}</p>
+                    ${role === 'company' ? `<p><strong>제작사명:</strong> ${companyName}</p>` : ''}
+                    <p><strong>이메일:</strong> ${email}</p>
+                    <p><strong>액세스 코드:</strong> <code style="background: #f0f0f0; padding: 0.2rem 0.5rem; border-radius: 3px; color: #E15E6E; font-weight: bold; font-size: 1.1rem;">${accessCode}</code></p>
+                </div>
+            `;
+
+            document.getElementById('summary').innerHTML = summary;
+
+            // 성공 메시지 표시
+            document.getElementById('application-form').style.display = 'none';
+            document.getElementById('success-message').classList.add('show');
+
+            console.log('신청 정보 저장 완료:', applicant);
+        });
+    </script>
+</body>
+</html>

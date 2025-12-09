@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>티켓츠 tCATS - 대시보드</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 로그인 화면 */
+        #login-section {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        #login-section h1 {
+            color: #E15E6E;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        #login-section h2 {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            font-weight: normal;
+        }
+
+        #login-section .logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        #password-input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        #password-input:focus {
+            outline: none;
+            border-color: #E15E6E;
+        }
+
+        #login-button {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #E15E6E 0%, #C14E5E 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(225, 94, 110, 0.4);
+        }
+
+        #error-message {
+            color: #ff4444;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        /* 대시보드 화면 */
+        #dashboard-section {
+            display: none;
+            width: 100%;
+            max-width: 1400px;
+            padding: 2rem;
+        }
+
+        #dashboard-section.active {
+            display: block;
+        }
+
+        .header-bar {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .header-bar h1 {
+            color: #E15E6E;
+            font-size: 2rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .user-badge.admin {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .user-badge.company {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .user-badge.member {
+            background: #95e1d3;
+            color: #333;
+        }
+
+        .logout-button {
+            padding: 0.5rem 1.5rem;
+            background: #666;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        .logout-button:hover {
+            background: #555;
+        }
+
+        .title-section {
+            text-align: center;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .title-section h2 {
+            color: #E15E6E;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .title-section p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .mode-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .mode-btn {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border: 3px solid transparent;
+        }
+
+        .mode-btn:hover:not(.locked) {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .mode-btn.active {
+            border-color: #E15E6E;
+            background: linear-gradient(135deg, #fff5f7 0%, #ffffff 100%);
+        }
+
+        .mode-btn.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #f5f5f5;
+        }
+
+        .mode-btn h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .mode-btn p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .lock-icon {
+            font-size: 2rem;
+            color: #999;
+            margin-bottom: 0.5rem;
+        }
+
+        .content-area {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .content-area.active {
+            display: block;
+        }
+
+        .menu-section {
+            margin-bottom: 2rem;
+        }
+
+        .menu-section h2 {
+            color: #E15E6E;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #E15E6E;
+        }
+
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .menu-item {
+            padding: 1.5rem;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .menu-item:hover {
+            border-color: #E15E6E;
+            background: #fff5f7;
+            transform: translateX(5px);
+        }
+
+        .menu-item h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .link-icon {
+            color: #E15E6E;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .mode-selection {
+                grid-template-columns: 1fr;
+            }
+            
+            .menu-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-bar {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 로그인 섹션 -->
+    <div id="login-section">
+        <div class="logo">🐱</div>
+        <h1>티켓츠 tCATS</h1>
+        <h2>공연 데이터 통합 플랫폼</h2>
+        <input 
+            type="password" 
+            id="password-input" 
+            placeholder="액세스 코드를 입력하세요"
+            autocomplete="off"
+        >
+        <button id="login-button">입장하기</button>
+        <div id="error-message">❌ 올바르지 않은 액세스 코드입니다</div>
+        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #eee;">
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">액세스 코드가 없으신가요?</p>
+            <a href="apply.html" style="color: #E15E6E; text-decoration: none; font-weight: bold; font-size: 0.95rem;">
+                📋 권한 신청하기 →
+            </a>
+        </div>
+    </div>
+
+    <!-- 대시보드 섹션 -->
+    <div id="dashboard-section">
+        <!-- 헤더 -->
+        <div class="header-bar">
+            <h1>🐱 티켓츠 tCATS</h1>
+            <div class="user-info">
+                <div class="user-badge" id="user-badge">사용자</div>
+                <button class="logout-button" onclick="logout()">로그아웃</button>
+            </div>
+        </div>
+
+        <!-- 타이틀 -->
+        <div class="title-section">
+            <h2>티켓츠 tCATS</h2>
+            <p>공연 데이터 통합 플랫폼</p>
+        </div>
+
+        <!-- 모드 선택 -->
+        <div class="mode-selection">
+            <div class="mode-btn" id="admin-btn" onclick="selectMode('admin')">
+                <h3>👤 관리자 모드</h3>
+                <p>통합 명부 및 시스템 관리</p>
+            </div>
+            <div class="mode-btn" id="company-btn" onclick="selectMode('company')">
+                <h3>🎭 제작사 모드</h3>
+                <p>타겟 마케팅 및 성과 분석</p>
+            </div>
+            <div class="mode-btn" id="member-btn" onclick="selectMode('member')">
+                <h3>👤 회원 모드</h3>
+                <p>QR 티켓 및 공연 정보</p>
+            </div>
+        </div>
+
+        <!-- Admin Content -->
+        <div id="admin-content" class="content-area">
+            <div class="menu-section">
+                <h2>📋 예약 관리</h2>
+                <div class="menu-items">
+                    <div class="menu-item" onclick="openLink('https://web-production-b67d.up.railway.app/')">
+                        <h3>
+                            통합 명부 작성
+                            <span class="link-icon">→</span>
+                        </h3>
+                        <p>인터파크, 티켓링크, 예스24 예매 데이터를 하나로 통합합니다.</p>
+                    </div>
+                    
+                    <div class="menu-item" onclick="openLink('https://web-production-b67d.up.railway.app/')">
+                        <h3>
+                            예약 리스트
+                            <span class="link-icon">→</span>
+                        </h3>
+                        <p>통합된 예약자 명단을 조회하고 관리합니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <h2>👥 계정 관리</h2>
+                <div class="menu-items">
+                    <div class="menu-item" onclick="showApplicants()">
+                        <h3>
+                            신청자 관리
+                            <span class="link-icon">→</span>
+                        </h3>
+                        <p>권한 신청자 목록을 확인하고 생성된 액세스 코드를 관리합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Company Content -->
+        <div id="company-content" class="content-area">
+            <div class="menu-section">
+                <h2>🎭 제작사 대시보드</h2>
+                <div class="menu-items">
+                    <div class="menu-item" onclick="openLink('https://jsun-cre8bara-production-dashboard-app-punkrv.streamlit.app/')">
+                        <h3>
+                            제작사 대시보드
+                            <span class="link-icon">→</span>
+                        </h3>
+                        <p>타겟 마케팅 및 성과 분석 대시보드를 확인합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Member Content -->
+        <div id="member-content" class="content-area">
+            <div class="menu-section">
+                <h2>🎫 티켓 관리</h2>
+                <div class="menu-items">
+                    <div class="menu-item" onclick="openLink('https://qr-ticketing-tcats-gogo.streamlit.app/')">
+                        <h3>
+                            QR 티켓 받기
+                            <span class="link-icon">→</span>
+                        </h3>
+                        <p>예약 정보를 입력하고 QR 티켓을 발급받습니다.</p>
+                    </div>
+                    
+                    <div class="menu-item" onclick="openLink('https://qr-ticketing-tcats-gogo.streamlit.app/')">
+                        <h3>
+                            동행인 공유
+                            <span class="link-icon">→</span>
+                        </h3>
+                        <p>동행인에게 QR 티켓을 공유합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 신청자 관리 모달 -->
+    <div id="applicants-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; overflow-y: auto;">
+        <div style="max-width: 1000px; margin: 2rem auto; background: white; border-radius: 20px; padding: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid #E15E6E;">
+                <h2 style="color: #E15E6E; margin: 0;">👥 신청자 관리</h2>
+                <button onclick="closeApplicantsModal()" style="background: #666; color: white; border: none; padding: 0.5rem 1rem; border-radius: 10px; cursor: pointer; font-size: 1rem;">✕ 닫기</button>
+            </div>
+            
+            <div id="applicants-list"></div>
+        </div>
+    </div>
+
+    <script>
+        // 액세스 코드 설정
+        const ACCESS_CODES = {
+            // 관리자 (고정)
+            'admin0301': 'admin',
+            
+            // 제작사 (연락처 기반 - 예시 계정)
+            'company_01012345678': 'company',
+            'company_01087654321': 'company',
+            'company_01055556666': 'company',
+            
+            // 회원 (연락처 기반 - 예시 계정)
+            'Member_01011112222': 'member',
+            'Member_01033334444': 'member',
+            'Member_01099998888': 'member'
+        };
+
+        // 권한별 접근 가능한 모드
+        const PERMISSIONS = {
+            'admin': ['admin', 'company', 'member'],  // 관리자: 모든 모드
+            'company': ['company'],                    // 제작사: 제작사 모드만
+            'member': ['member']                       // 회원: 회원 모드만
+        };
+
+        // 로그인 처리
+        document.getElementById('login-button').addEventListener('click', login);
+        document.getElementById('password-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+
+        function login() {
+            const password = document.getElementById('password-input').value;
+            
+            // 기본 액세스 코드
+            let role = ACCESS_CODES[password];
+            
+            // 기본 코드에 없으면 localStorage에서 확인
+            if (!role) {
+                const dynamicCodes = JSON.parse(localStorage.getItem('tcats_access_codes') || '{}');
+                role = dynamicCodes[password];
+            }
+
+            if (role) {
+                // 로그인 성공
+                localStorage.setItem('tcats_role', role);
+                localStorage.setItem('tcats_logged_in', 'true');
+                showDashboard(role);
+            } else {
+                // 로그인 실패
+                document.getElementById('error-message').style.display = 'block';
+                document.getElementById('password-input').value = '';
+                setTimeout(() => {
+                    document.getElementById('error-message').style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function showDashboard(role) {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('dashboard-section').classList.add('active');
+            
+            // 사용자 뱃지 설정
+            const badge = document.getElementById('user-badge');
+            const badgeText = {
+                'admin': '어드민',
+                'company': '제작사',
+                'member': '회원'
+            };
+            badge.textContent = badgeText[role];
+            badge.className = 'user-badge ' + role;
+
+            // 권한에 따라 모드 버튼 표시/잠금
+            const allowedModes = PERMISSIONS[role];
+            const allModes = ['admin', 'company', 'member'];
+
+            allModes.forEach(mode => {
+                const btn = document.getElementById(mode + '-btn');
+                if (allowedModes.includes(mode)) {
+                    btn.classList.remove('locked');
+                } else {
+                    btn.classList.add('locked');
+                    btn.innerHTML = '<div class="lock-icon">🔒</div><h3>' + btn.querySelector('h3').textContent + '</h3><p>접근 권한이 없습니다</p>';
+                    btn.onclick = null;
+                }
+            });
+
+            // URL 경로에 따라 자동 모드 선택
+            const path = window.location.pathname.toLowerCase();
+            if (path.includes('admin') && allowedModes.includes('admin')) {
+                selectMode('admin');
+            } else if (path.includes('company') && allowedModes.includes('company')) {
+                selectMode('company');
+            } else if (path.includes('member') && allowedModes.includes('member')) {
+                selectMode('member');
+            } else {
+                // 기본: 첫 번째 허용된 모드 선택
+                selectMode(allowedModes[0]);
+            }
+        }
+
+        function selectMode(mode) {
+            const role = localStorage.getItem('tcats_role');
+            const allowedModes = PERMISSIONS[role];
+
+            // 권한 확인
+            if (!allowedModes.includes(mode)) {
+                alert('❌ 접근 권한이 없습니다!');
+                return;
+            }
+
+            // 모든 버튼 비활성화
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 모든 콘텐츠 숨기기
+            document.querySelectorAll('.content-area').forEach(area => {
+                area.classList.remove('active');
+            });
+
+            // 선택된 모드 활성화
+            document.getElementById(mode + '-btn').classList.add('active');
+            document.getElementById(mode + '-content').classList.add('active');
+        }
+
+        function openLink(url) {
+            window.open(url, '_blank');
+        }
+
+        function logout() {
+            localStorage.removeItem('tcats_role');
+            localStorage.removeItem('tcats_logged_in');
+            location.reload();
+        }
+
+        // 신청자 목록 보기
+        function showApplicants() {
+            const applicants = JSON.parse(localStorage.getItem('tcats_applicants') || '[]');
+            const modal = document.getElementById('applicants-modal');
+            const listContainer = document.getElementById('applicants-list');
+
+            if (applicants.length === 0) {
+                listContainer.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: #999;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
+                        <p>아직 신청자가 없습니다.</p>
+                    </div>
+                `;
+            } else {
+                let html = `
+                    <div style="margin-bottom: 1rem; color: #666;">
+                        <strong>총 ${applicants.length}명의 신청자</strong>
+                    </div>
+                    <div style="display: grid; gap: 1rem;">
+                `;
+
+                applicants.forEach((app, index) => {
+                    const roleColor = app.role === 'company' ? '#4ecdc4' : '#95e1d3';
+                    const roleText = app.role === 'company' ? '제작사' : '회원';
+                    
+                    html += `
+                        <div style="border: 2px solid #eee; border-radius: 10px; padding: 1.5rem; background: #fafafa;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                                <div>
+                                    <span style="background: ${roleColor}; color: white; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.85rem; font-weight: bold;">${roleText}</span>
+                                    <span style="color: #999; font-size: 0.85rem; margin-left: 1rem;">${app.timestamp}</span>
+                                </div>
+                                <button onclick="deleteApplicant(${index})" style="background: #ff6b6b; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">삭제</button>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                <div>
+                                    <div style="color: #999; font-size: 0.85rem; margin-bottom: 0.3rem;">이름</div>
+                                    <div style="font-weight: bold;">${app.name}</div>
+                                </div>
+                                <div>
+                                    <div style="color: #999; font-size: 0.85rem; margin-bottom: 0.3rem;">연락처</div>
+                                    <div style="font-weight: bold;">${app.phone}</div>
+                                </div>
+                                ${app.companyName ? `
+                                <div>
+                                    <div style="color: #999; font-size: 0.85rem; margin-bottom: 0.3rem;">제작사명</div>
+                                    <div style="font-weight: bold;">${app.companyName}</div>
+                                </div>
+                                ` : ''}
+                                <div>
+                                    <div style="color: #999; font-size: 0.85rem; margin-bottom: 0.3rem;">이메일</div>
+                                    <div>${app.email}</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ddd;">
+                                <div style="color: #999; font-size: 0.85rem; margin-bottom: 0.3rem;">액세스 코드</div>
+                                <div style="background: white; padding: 0.8rem; border-radius: 5px; font-family: monospace; font-weight: bold; color: #E15E6E; font-size: 1.1rem;">${app.accessCode}</div>
+                            </div>
+                            <div style="margin-top: 1rem;">
+                                <div style="color: #999; font-size: 0.85rem; margin-bottom: 0.3rem;">이용 목적</div>
+                                <div style="color: #666; font-size: 0.9rem; line-height: 1.5;">${app.purpose}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `</div>`;
+                listContainer.innerHTML = html;
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function closeApplicantsModal() {
+            document.getElementById('applicants-modal').style.display = 'none';
+        }
+
+        function deleteApplicant(index) {
+            if (confirm('이 신청자를 삭제하시겠습니까?')) {
+                const applicants = JSON.parse(localStorage.getItem('tcats_applicants') || '[]');
+                applicants.splice(index, 1);
+                localStorage.setItem('tcats_applicants', JSON.stringify(applicants));
+                showApplicants();
+            }
+        }
+
+        // 페이지 로드 시 세션 확인
+        window.addEventListener('DOMContentLoaded', function() {
+            const isLoggedIn = localStorage.getItem('tcats_logged_in');
+            const role = localStorage.getItem('tcats_role');
+
+            if (isLoggedIn === 'true' && role) {
+                showDashboard(role);
+            }
+        });
+    </script>
+</body>
+</html>
