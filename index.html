@@ -618,6 +618,40 @@
         html {
             scroll-behavior: smooth;
         }
+        
+        /* 플로팅 배너 */
+        .floating-banner {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 999;
+            width: 200px;
+            max-width: 90%;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .floating-banner:hover {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+        }
+        
+        .floating-banner img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .floating-banner {
+                width: 120px;
+                right: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -791,12 +825,6 @@
                     <h3>공연장 입장</h3>
                     <p>QR로 간편 입장</p>
                 </div>
-
-                <div class="process-step">
-                    <div class="step-number">6</div>
-                    <h3>리뷰 & 리워드</h3>
-                    <p>공연 만족도 평가, 리워드, 재관람 또는 지인 추천</p>
-                </div>
             </div>
         </div>
     </section>
@@ -820,7 +848,6 @@
                                 <li>3. 좌석 선택</li>
                                 <li>4. 티켓 발권</li>
                                 <li>5. 공연장 입장</li>
-                                <li>6. 리뷰 & 리워드</li>
                             </ol>
                         </div>
                     </div>
@@ -977,5 +1004,12 @@
             }
         });
     </script>
+    
+    <!-- 플로팅 배너 -->
+    <div class="floating-banner">
+        <a href="#contact">
+            <img src="banner.png" alt="티켓츠 배너">
+        </a>
+    </div>
 </body>
 </html>
