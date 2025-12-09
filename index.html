@@ -676,28 +676,40 @@
                     background: #000;
                     border-radius: 20px;
                     cursor: pointer;
+                    overflow: hidden;
                     display: flex;
                     justify-content: center;
-                    align-items: center;
-                    transition: opacity 0.3s;">
-                    <img src="tcats_title_logo.jpg" alt="tCATS" style="max-width: 60%; max-height: 60%; object-fit: contain;">
-                    <div style="
+                    align-items: center;">
+                    <!-- 썸네일 이미지 - 전체 화면 -->
+                    <img src="tcats_title_logo.jpg" alt="tCATS" style="
                         position: absolute;
-                        width: 80px;
-                        height: 80px;
-                        background: rgba(255, 255, 255, 0.9);
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        object-position: center;">
+                    <!-- 재생 버튼 -->
+                    <div style="
+                        position: relative;
+                        z-index: 10;
+                        width: 100px;
+                        height: 100px;
+                        background: rgba(255, 255, 255, 0.95);
                         border-radius: 50%;
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+                        transition: all 0.3s;
+                        pointer-events: none;">
                         <div style="
                             width: 0;
                             height: 0;
-                            border-left: 25px solid #E15E6E;
-                            border-top: 15px solid transparent;
-                            border-bottom: 15px solid transparent;
-                            margin-left: 5px;"></div>
+                            border-left: 30px solid #E15E6E;
+                            border-top: 18px solid transparent;
+                            border-bottom: 18px solid transparent;
+                            margin-left: 8px;"></div>
                     </div>
                 </div>
             </div>
@@ -724,28 +736,42 @@
                     background: #000;
                     border-radius: 20px;
                     cursor: pointer;
+                    overflow: hidden;
                     display: flex;
                     justify-content: center;
-                    align-items: center;
-                    flex-direction: column;
-                    transition: opacity 0.3s;">
-                    <img src="tcats_title_logo.jpg" alt="tCATS" style="max-width: 70%; max-height: 40%; object-fit: contain;">
+                    align-items: center;">
+                    <!-- 썸네일 이미지 - 전체 화면 -->
+                    <img src="tcats_title_logo.jpg" alt="tCATS" style="
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        object-position: center;">
+                    <!-- 재생 버튼 -->
                     <div style="
-                        width: 60px;
-                        height: 60px;
-                        background: rgba(255, 255, 255, 0.9);
+                        position: relative;
+                        z-index: 10;
+                        width: 80px;
+                        height: 80px;
+                        background: rgba(255, 255, 255, 0.95);
                         border-radius: 50%;
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        margin-top: 2rem;
-                        box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+                        pointer-events: none;">
                         <div style="
                             width: 0;
                             height: 0;
-                            border-left: 20px solid #E15E6E;
-                            border-top: 12px solid transparent;
-                            border-bottom: 12px solid transparent;
+                            border-left: 24px solid #E15E6E;
+                            border-top: 15px solid transparent;
+                            border-bottom: 15px solid transparent;
+                            margin-left: 6px;"></div>
+                    </div>
+                </div>
+            </div>
                             margin-left: 4px;"></div>
                     </div>
                 </div>
@@ -937,6 +963,13 @@
             const video = document.getElementById(type + '-video');
             const overlay = document.getElementById(type + '-overlay');
             
+            if (!video || !overlay) {
+                console.error('Video or overlay not found');
+                return;
+            }
+            
+            console.log('Playing video:', type);
+            
             // 오버레이 숨기기
             overlay.style.display = 'none';
             
@@ -944,13 +977,23 @@
             video.controls = true;
             
             // 동영상 재생
-            video.play();
+            video.play().catch(err => {
+                console.error('Play error:', err);
+            });
             
             // 동영상 종료 시 오버레이 다시 표시
             video.addEventListener('ended', function() {
                 overlay.style.display = 'flex';
                 video.controls = false;
-            });
+            }, { once: true });
+            
+            // 일시정지 시에도 처리 (선택사항)
+            video.addEventListener('pause', function() {
+                if (video.ended) {
+                    overlay.style.display = 'flex';
+                    video.controls = false;
+                }
+            }, { once: true });
         }
         
         // 모바일 메뉴 토글
