@@ -655,29 +655,100 @@
             <p class="section-subtitle">티켓츠의 혁신적인 서비스를 영상으로 만나보세요</p>
             
             <!-- PC용 가로형 영상 -->
-            <div class="video-horizontal">
+            <div class="video-horizontal" style="position: relative;">
                 <video 
+                    id="horizontal-video"
                     width="100%" 
                     height="auto" 
-                    controls 
                     preload="metadata"
-                    style="border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+                    style="border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: block;">
                     <source src="videos/horizontal.mp4" type="video/mp4">
                     브라우저가 비디오를 지원하지 않습니다.
                 </video>
+                
+                <!-- 썸네일 오버레이 -->
+                <div id="horizontal-overlay" onclick="playVideo('horizontal')" style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: #000;
+                    border-radius: 20px;
+                    cursor: pointer;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    transition: opacity 0.3s;">
+                    <img src="tcats_title_logo.jpg" alt="tCATS" style="max-width: 60%; max-height: 60%; object-fit: contain;">
+                    <div style="
+                        position: absolute;
+                        width: 80px;
+                        height: 80px;
+                        background: rgba(255, 255, 255, 0.9);
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                        <div style="
+                            width: 0;
+                            height: 0;
+                            border-left: 25px solid #E15E6E;
+                            border-top: 15px solid transparent;
+                            border-bottom: 15px solid transparent;
+                            margin-left: 5px;"></div>
+                    </div>
+                </div>
             </div>
 
             <!-- 모바일용 세로형 영상 -->
-            <div class="video-vertical">
+            <div class="video-vertical" style="position: relative;">
                 <video 
+                    id="vertical-video"
                     width="100%" 
                     height="auto" 
-                    controls 
                     preload="metadata"
-                    style="border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+                    style="border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: block;">
                     <source src="videos/vertical.mp4" type="video/mp4">
                     브라우저가 비디오를 지원하지 않습니다.
                 </video>
+                
+                <!-- 썸네일 오버레이 -->
+                <div id="vertical-overlay" onclick="playVideo('vertical')" style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: #000;
+                    border-radius: 20px;
+                    cursor: pointer;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    transition: opacity 0.3s;">
+                    <img src="tcats_title_logo.jpg" alt="tCATS" style="max-width: 70%; max-height: 40%; object-fit: contain;">
+                    <div style="
+                        width: 60px;
+                        height: 60px;
+                        background: rgba(255, 255, 255, 0.9);
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        margin-top: 2rem;
+                        box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                        <div style="
+                            width: 0;
+                            height: 0;
+                            border-left: 20px solid #E15E6E;
+                            border-top: 12px solid transparent;
+                            border-bottom: 12px solid transparent;
+                            margin-left: 4px;"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -861,6 +932,27 @@
     </footer>
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // 동영상 재생 함수
+        function playVideo(type) {
+            const video = document.getElementById(type + '-video');
+            const overlay = document.getElementById(type + '-overlay');
+            
+            // 오버레이 숨기기
+            overlay.style.display = 'none';
+            
+            // 컨트롤 표시
+            video.controls = true;
+            
+            // 동영상 재생
+            video.play();
+            
+            // 동영상 종료 시 오버레이 다시 표시
+            video.addEventListener('ended', function() {
+                overlay.style.display = 'flex';
+                video.controls = false;
+            });
+        }
+        
         // 모바일 메뉴 토글
         const menuToggle = document.getElementById('menuToggle');
         const navLinks = document.getElementById('navLinks');
