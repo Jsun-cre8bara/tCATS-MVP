@@ -662,7 +662,7 @@
                     height="auto" 
                     preload="metadata"
                     poster="tcats_title_logo.jpg"
-                    style="border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: block; min-height: 400px; background: #000;">
+                    style="position: relative; z-index: 1; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: block; min-height: 400px; background: #000;">
                     <source src="videos/horizontal.mp4" type="video/mp4">
                     브라우저가 비디오를 지원하지 않습니다.
                 </video>
@@ -680,7 +680,7 @@
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    z-index: 5;">
+                    z-index: 10;">
                     <!-- 재생 버튼 -->
                     <div style="
                         width: 100px;
@@ -691,7 +691,8 @@
                         justify-content: center;
                         align-items: center;
                         box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-                        transition: all 0.3s;">
+                        transition: all 0.3s;
+                        pointer-events: none;">
                         <div style="
                             width: 0;
                             height: 0;
@@ -711,7 +712,7 @@
                     height="auto" 
                     preload="metadata"
                     poster="tcats_title_logo.jpg"
-                    style="border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: block; min-height: 500px; background: #000;">
+                    style="position: relative; z-index: 1; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: block; min-height: 500px; background: #000;">
                     <source src="videos/vertical.mp4" type="video/mp4">
                     브라우저가 비디오를 지원하지 않습니다.
                 </video>
@@ -729,7 +730,7 @@
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    z-index: 5;">
+                    z-index: 10;">
                     <!-- 재생 버튼 -->
                     <div style="
                         width: 80px;
@@ -739,7 +740,8 @@
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        box-shadow: 0 8px 30px rgba(0,0,0,0.4);">
+                        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+                        pointer-events: none;">
                         <div style="
                             width: 0;
                             height: 0;
@@ -890,7 +892,7 @@
         <p class="footer-tagline">We are One TEAM."Together, Empathy, Action, Mission"</p>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         // 동영상 재생 함수
         function playVideo(type) {
             const video = document.getElementById(type + '-video');
@@ -904,10 +906,7 @@
             console.log('Playing video:', type);
             
             // 오버레이 숨기기
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 300);
+            overlay.style.display = 'none';
             
             // 컨트롤 표시
             video.controls = true;
@@ -917,8 +916,6 @@
                 console.log('Video playing successfully');
             }).catch(err => {
                 console.error('Play error:', err);
-                overlay.style.display = 'flex';
-                overlay.style.opacity = '1';
             });
         }
         
@@ -931,7 +928,8 @@
             const navLinks = document.getElementById('navLinks');
             
             if (menuToggle && navLinks) {
-                menuToggle.addEventListener('click', function() {
+                menuToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
                     console.log('Menu toggle clicked');
                     navLinks.classList.toggle('active');
                 });
@@ -946,26 +944,38 @@
                 
                 console.log('Mobile menu initialized');
             } else {
-                console.error('Menu elements not found');
+                console.error('Menu elements not found', {
+                    menuToggle: menuToggle,
+                    navLinks: navLinks
+                });
             }
             
             // PC용 동영상
             const horizontalOverlay = document.getElementById('horizontal-overlay');
             if (horizontalOverlay) {
-                horizontalOverlay.addEventListener('click', function() {
+                horizontalOverlay.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Horizontal overlay clicked');
                     playVideo('horizontal');
                 });
                 console.log('Horizontal overlay click listener added');
+            } else {
+                console.error('Horizontal overlay not found');
             }
             
             // 모바일용 동영상
             const verticalOverlay = document.getElementById('vertical-overlay');
             if (verticalOverlay) {
-                verticalOverlay.addEventListener('click', function() {
+                verticalOverlay.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Vertical overlay clicked');
                     playVideo('vertical');
                 });
                 console.log('Vertical overlay click listener added');
+            } else {
+                console.error('Vertical overlay not found');
             }
         });
-
-        // 
+    </script>
+</body>
+</html>
