@@ -624,18 +624,28 @@
             position: fixed;
             right: 20px;
             top: 50%;
-            transform: translateY(-50%);
+            margin-top: -100px; /* 높이의 절반만큼 위로 */
             z-index: 999;
             width: 200px;
             max-width: 90%;
             border-radius: 15px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-            cursor: pointer;
+            transition: box-shadow 0.3s ease;
+            cursor: move;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            touch-action: none;
+        }
+        
+        .floating-banner.dragging {
+            transition: none;
+            cursor: grabbing;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
         }
         
         .floating-banner:hover {
-            transform: translateY(-50%) scale(1.05);
             box-shadow: 0 15px 50px rgba(0,0,0,0.4);
         }
         
@@ -644,6 +654,8 @@
             height: auto;
             display: block;
             border-radius: 15px;
+            pointer-events: none;
+            user-select: none;
         }
         
         @media (max-width: 768px) {
@@ -1002,14 +1014,100 @@
             } else {
                 console.error('Vertical overlay not found');
             }
+            
+            // 플로팅 배너 드래그 기능
+            const banner = document.querySelector('.floating-banner');
+            if (banner) {
+                let isDragging = false;
+                let startX, startY;
+                let currentX = 0, currentY = 0;
+                let hasMoved = false;
+                
+                banner.addEventListener('mousedown', startDrag);
+                banner.addEventListener('touchstart', startDrag, { passive: false });
+                
+                function startDrag(e) {
+                    isDragging = true;
+                    hasMoved = false;
+                    banner.classList.add('dragging');
+                    
+                    if (e.type === 'touchstart') {
+                        startX = e.touches[0].clientX - currentX;
+                        startY = e.touches[0].clientY - currentY;
+                    } else {
+                        startX = e.clientX - currentX;
+                        startY = e.clientY - currentY;
+                    }
+                    
+                    console.log('Drag started');
+                }
+                
+                document.addEventListener('mousemove', onDrag);
+                document.addEventListener('touchmove', onDrag, { passive: false });
+                
+                function onDrag(e) {
+                    if (!isDragging) return;
+                    
+                    e.preventDefault();
+                    hasMoved = true;
+                    
+                    let clientX, clientY;
+                    
+                    if (e.type === 'touchmove') {
+                        clientX = e.touches[0].clientX;
+                        clientY = e.touches[0].clientY;
+                    } else {
+                        clientX = e.clientX;
+                        clientY = e.clientY;
+                    }
+                    
+                    currentX = clientX - startX;
+                    currentY = clientY - startY;
+                    
+                    // 화면 경계 체크
+                    const rect = banner.getBoundingClientRect();
+                    const maxX = window.innerWidth - rect.width;
+                    const maxY = window.innerHeight - rect.height;
+                    
+                    currentX = Math.max(0, Math.min(currentX, maxX));
+                    currentY = Math.max(0, Math.min(currentY, maxY));
+                    
+                    banner.style.left = currentX + 'px';
+                    banner.style.top = currentY + 'px';
+                    banner.style.right = 'auto';
+                    banner.style.transform = 'none';
+                }
+                
+                document.addEventListener('mouseup', stopDrag);
+                document.addEventListener('touchend', stopDrag);
+                
+                function stopDrag(e) {
+                    if (isDragging) {
+                        isDragging = false;
+                        banner.classList.remove('dragging');
+                        
+                        // 움직이지 않았으면 클릭으로 인식
+                        if (!hasMoved) {
+                            window.location.href = '#contact';
+                        }
+                        
+                        console.log('Drag ended');
+                    }
+                }
+                
+                // 초기 위치 설정
+                const rect = banner.getBoundingClientRect();
+                currentX = rect.left;
+                currentY = rect.top;
+                
+                console.log('Floating banner drag initialized', { currentX, currentY });
+            }
         });
     </script>
     
     <!-- 플로팅 배너 -->
-    <div class="floating-banner">
-        <a href="#contact">
-            <img src="banner.png" alt="티켓츠 배너">
-        </a>
+    <div class="floating-banner" title="드래그해서 이동할 수 있습니다">
+        <img src="banner.png" alt="티켓츠 배너">
     </div>
 </body>
 </html>
