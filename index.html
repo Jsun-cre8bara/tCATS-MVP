@@ -23,7 +23,7 @@
         header {
             background: linear-gradient(135deg, #00A6ED 0%, #0088CC 100%);
             color: white;
-            padding: 1rem 0;
+            padding: 1.5rem 0;  /* 1rem → 1.5rem */
             position: fixed;
             width: 100%;
             top: 0;
@@ -47,19 +47,19 @@
         }
 
         .logo-link img {
-            width: 50px;
-            height: 50px;
+            width: 100px;  /* 50px → 100px */
+            height: 100px;
             object-fit: contain;
             transition: opacity 0.3s;
         }
 
         .logo-text {
-            font-size: 1.8rem;
+            font-size: 3rem;  /* 1.8rem → 3rem */
             font-weight: 900;
-            letter-spacing: 2px;
+            letter-spacing: 3px;  /* 2px → 3px */
             color: #FFA500;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            margin-left: 0.5rem;
+            margin-left: 1rem;  /* 0.5rem → 1rem */
         }
 
         .logo-link:hover img {
@@ -130,7 +130,7 @@
             background: linear-gradient(rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.5)), 
                         url('main_BG_img.png') center/cover no-repeat;
             color: white;
-            padding: 250px 2rem 100px;
+            padding: 280px 2rem 100px;  /* 250px → 280px */
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -354,8 +354,8 @@
         }
 
         .phone-screen .phone-logo {
-            width: 100px;
-            height: 100px;
+            width: 150px;  /* 100px → 150px */
+            height: 150px;
             object-fit: contain;
             margin-bottom: 1rem;
         }
@@ -497,8 +497,8 @@
         }
 
         .contact-cat {
-            width: 100px;
-            height: 100px;
+            width: 150px;  /* 100px → 150px */
+            height: 150px;
             margin: 0 auto 1rem;
             object-fit: contain;
         }
@@ -713,7 +713,7 @@
     <header>
         <nav>
             <a href="#home" class="logo-link">
-                <img src="logo.png" alt="tCATS" style="width: 80px; height: 80px; object-fit: contain;">
+                <img src="logo.png" alt="tCATS">
                 <span class="logo-text">tCATS</span>
             </a>
             <button class="menu-toggle" id="menuToggle">☰</button>
