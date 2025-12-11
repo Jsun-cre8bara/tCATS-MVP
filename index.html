@@ -549,18 +549,23 @@
                 padding: 0 1rem;
             }
 
+            /* 모바일 헤더 크기 증가 */
             .logo-link img {
-                width: 80px;
-                height: 80px;
+                width: 120px;  /* 80px → 120px */
+                height: 120px;
             }
 
             .logo-text {
-                font-size: 1.5rem;
-                letter-spacing: 1px;
+                font-size: 2.5rem;  /* 1.5rem → 2.5rem */
+                letter-spacing: 2px;
+            }
+            
+            .menu-toggle {
+                font-size: 2.5rem;  /* 1.8rem → 2.5rem */
             }
 
             .hero {
-                padding: 180px 2rem 80px;
+                padding: 220px 2rem 80px;  /* 180px → 220px (헤더 커진 만큼) */
             }
 
             .hero h1 {
@@ -594,6 +599,12 @@
                 width: 250px;
                 height: 500px;
             }
+            
+            /* 모바일 phone-logo 크기 증가 */
+            .phone-screen .phone-logo {
+                width: 150px;  /* 100px → 150px */
+                height: 150px;
+            }
 
             .section-title {
                 font-size: 2rem;
@@ -602,16 +613,47 @@
             .process-grid {
                 grid-template-columns: 1fr;
             }
+            
+            /* 문의 섹션 로고 크기 증가 */
+            .contact-cat {
+                width: 150px;  /* 100px → 150px */
+                height: 150px;
+            }
+            
+            /* 문의 박스 프레임 조정 */
+            .contact-box {
+                padding: 3rem 2rem;
+                max-width: 90%;
+            }
+            
+            .contact-box h3 {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+                line-height: 1.4;
+            }
 
             .contact-info strong {
                 display: block;
                 width: auto;
-                margin-bottom: 0.3rem;
+                margin-bottom: 0.5rem;
+                font-size: 1.2rem;  /* 크기 증가 */
             }
             
             .contact-info p {
-                font-size: 1rem;
-                word-break: break-all;
+                font-size: 1.1rem;  /* 1rem → 1.1rem */
+                margin: 1.5rem 0;  /* 줄간격 유지 */
+                word-break: break-word;
+                line-height: 1.6;
+            }
+            
+            .contact-info a {
+                color: white;
+                text-decoration: underline;
+            }
+            
+            /* 모바일에서 플로팅 배너 숨김 */
+            .floating-banner {
+                display: none !important;
             }
         }
 
